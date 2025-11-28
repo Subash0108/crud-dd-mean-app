@@ -3,7 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tutorial } from '../models/tutorial.model';
 
-const baseUrl = 'http://localhost:8080/api/tutorials';
+// Use localhost backend during development, and relative path when deployed
+const baseUrl =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:8080/api/tutorials'
+    : '/api/tutorials';
 
 @Injectable({
   providedIn: 'root'

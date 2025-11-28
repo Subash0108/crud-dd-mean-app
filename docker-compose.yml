@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mean-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mean-backend
+    restart: always
+    depends_on:
+      - mongo
+    environment:
+      # Backend listens on this port
+      - PORT=8080
+      # Use the MongoDB service hostname defined above
+      - MONGODB_URI=mongodb://mongo:27017/dd_db
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mean-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+
+volumes:
+  mongo-data:
+
+
