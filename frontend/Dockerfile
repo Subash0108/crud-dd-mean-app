@@ -11,16 +11,18 @@ COPY . .
 # Build Angular app for production
 RUN npm run build
 
-### Stage 2: Serve with Nginx
+### Stage 2: Serve with Nginx (acting as reverse proxy)
 FROM nginx:alpine
 
 # Copy built app from the build stage
 COPY --from=build /usr/src/app/dist/angular-15-crud /usr/share/nginx/html
 
+# Custom Nginx config for SPA + backend proxy
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose HTTP port
 EXPOSE 80
 
-# Nginx default command
 CMD ["nginx", "-g", "daemon off;"]
 
 
